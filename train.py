@@ -1,3 +1,5 @@
+"""Train the encoder, decoder, discriminator, and MBTI classifier models."""
+
 from torch import nn, optim
 import torch
 
@@ -8,7 +10,8 @@ from dataset import MBTIDataset, DATASET_SIZE
 from torch.utils.data import DataLoader
 from embeddings import generate_embeddings
 
-input_dim = EMBEDDING_DIM  # Assuming BERT embeddings of size 384
+# The transformer embeddings determine the network input width.
+input_dim = EMBEDDING_DIM
 
 mbti_dataset = MBTIDataset(size=DATASET_SIZE)
 sentence_embeddings,label_onehots = generate_embeddings(mbti_dataset)
@@ -36,7 +39,7 @@ for epoch in range(NUM_EPOCHS):
         # Encode
         z = encoder(x)
 
-        # --- Discriminator ---
+        # Teach the discriminator to distinguish sampled and encoded latents.
         real = torch.ones(x.size(0),1)
         fake = torch.zeros(x.size(0),1)
         disc_real = discriminator(torch.randn_like(z))
@@ -44,23 +47,23 @@ for epoch in range(NUM_EPOCHS):
         loss_disc = bce(disc_real, real) + bce(disc_fake, fake)
         optim_disc.zero_grad(); loss_disc.backward(); optim_disc.step()
 
-        # --- Encoder (adversarial) ---
+        # Encourage the encoder to produce latents the discriminator accepts.
         disc_fake = discriminator(z)
         loss_enc_adv = bce(disc_fake, real)
 
-        # --- Decoder (reconstruction) ---
+        # Reconstruct the original embedding using the latent vector and label.
         x_hat = decoder(z, labels)
         loss_rec = mse(x_hat, x)
 
-        # --- Classifier ---
+        # Predict the MBTI class represented by the one-hot target label.
         logits = classifier(z)
         target = torch.argmax(labels, dim=1)
         loss_cls = loss_fn(logits, target)
 
-        # --- Total loss ---
+        # Optimize the reconstruction, adversarial, and classification objectives.
         loss_total = loss_rec + loss_enc_adv + loss_cls
         optim_enc.zero_grad(); optim_dec.zero_grad(); optim_cls.zero_grad()
         loss_total.backward()
         optim_enc.step(); optim_dec.step(); optim_cls.step()
 
-    print(f"Epoch {epoch+1}, Loss: {loss_total.item():.4f}")
+    print(f"📈 Epoch {epoch + 1:02d}/{NUM_EPOCHS} complete  |  loss: {loss_total.item():.4f}")

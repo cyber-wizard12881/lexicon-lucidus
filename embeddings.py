@@ -1,3 +1,5 @@
+"""Create masked mean-pooled sentence embeddings with a transformer model."""
+
 from transformers import AutoTokenizer, AutoModel
 import torch
 from dataset import MBTIDataset
@@ -8,6 +10,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
 def generate_embeddings(dataset: MBTIDataset):
+    """Generate one embedding and one-hot label for every sampled record."""
     sentences = [(text, label) for text, label in dataset.data]  # Extract text and labels from the dataset
 
     # Sift out the One Hot Labels
@@ -34,11 +37,12 @@ def generate_embeddings(dataset: MBTIDataset):
     sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
     sentence_embeddings = sum_embeddings / sum_mask
-    print("Embeddings shape:", sentence_embeddings.shape)  
+    print(f"\n🧠 Embeddings ready  |  shape: {sentence_embeddings.shape}")
     # Expected: torch.Size([640, 384])
     return sentence_embeddings, label_onehots
 
 def generate_embeddings_for_text(text: str):
+    """Generate a single masked mean-pooled embedding for an input sentence."""
     # Tokenize the input text
     inputs = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
 
@@ -54,6 +58,6 @@ def generate_embeddings_for_text(text: str):
     sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
     sentence_embedding = sum_embeddings / sum_mask
-    print("Single embedding shape:", sentence_embedding.shape)  
+    print(f"🧠 Input embedding ready  |  shape: {sentence_embedding.shape}")
     # Expected: torch.Size([1, 384])
     return sentence_embedding

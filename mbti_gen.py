@@ -1,8 +1,11 @@
+"""Expand seed MBTI sentences into the CSV used by the training pipeline."""
+
 import csv
 import random
 import pandas as pd
 
 mbti_df = pd.read_csv("mbti_texts_seeds.csv")
+# Group seed sentences by type so each output row keeps its original label.
 mbti_samples = {
     "INTJ": mbti_df[mbti_df['Type'] == 'INTJ']['Text'].to_list(),
     "INTP": mbti_df[mbti_df['Type'] == 'INTP']['Text'].to_list(),
@@ -22,7 +25,7 @@ mbti_samples = {
     "ESFP": mbti_df[mbti_df['Type'] == 'ESFP']['Text'].to_list()
 }
 
-# Expand each list to 50 unique samples (use paraphrasing or GPT-based augmentation)
+# Expand each list with simple suffix variations and write the generated CSV.
 with open("mbti_texts.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(["Type","Text"])
@@ -32,3 +35,5 @@ with open("mbti_texts.csv", "w", newline="") as f:
             t = random.choice(texts)[:-1] + " " + random.choice(["always.", "often.", "sometimes.", "in my life.", "in my experience.", "in my opinion.", "in my perspective.", "in my view.", "in my understanding.", "in my belief.", "in my judgment.", "in my estimation.", "in my assessment.", "in my evaluation.", "in my analysis.", "in my interpretation.", "in my conclusion.", "in my reasoning.", "in my logic.", "in my deduction."])
             count += 1
             writer.writerow([mbti, t])
+
+print("✅ MBTI text generation complete  |  wrote mbti_texts.csv")

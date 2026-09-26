@@ -1,4 +1,5 @@
 
+# MBTI labels are kept in the same order used by the one-hot encodings.
 mbti_types = [
     "INTJ","INTP","ENTJ","ENTP",
     "INFJ","INFP","ENFJ","ENFP",
@@ -6,14 +7,21 @@ mbti_types = [
     "ISTP","ISFP","ESTP","ESFP"
 ]
 
-DATASET_SIZE = 640  # Total number of samples in the dataset
-EMBEDDING_DIM = 384  # Dimension of the text embeddings
+# Total number of samples drawn for the generated training dataset.
+DATASET_SIZE = 640
+# Size produced by the sentence-transformer model.
+EMBEDDING_DIM = 384
 
+# Size of the compressed representation used by the neural networks.
 LATENT_DIM = 64
+# Number of values in each one-hot MBTI label.
 LABEL_DIM = 16
 
-NUM_CLASSES = 16  # Number of MBTI types
+# Number of MBTI types predicted by the classifier.
+NUM_CLASSES = 16
 
-BATCH_SIZE = 32  # Batch size for training
+# Number of samples processed in one training step.
+BATCH_SIZE = 32
 
-NUM_EPOCHS = 5 # Number of epochs for training
+# Number of complete passes through the generated dataset.
+NUM_EPOCHS = 5
