@@ -75,6 +75,19 @@ python inference.py
 
 This generates the training CSV, then trains once and predicts. To train without running inference, use `python train.py` instead. `run.ps1` is a PowerShell script and is intended for Windows PowerShell; use the explicit Python commands on macOS and Linux.
 
+## Train the Model
+
+To run only the training step, activate the virtual environment, change to the repository root, and make sure `mbti_texts.csv` exists. Generate it from the seed data if needed:
+
+```powershell
+python mbti_gen.py
+python train.py
+```
+
+Use the same commands in an activated virtual environment on macOS or Linux. You can skip `mbti_gen.py` when you already have a generated `mbti_texts.csv` and do not want to replace it. The training script samples 640 rows, creates the transformer embeddings, initializes the encoder, decoder, discriminator, and classifier, then trains for the configured number of epochs. It prints the latest training loss at the end of each epoch. Adjust the sample size, batch size, or epoch count in `constants.py` before running if needed.
+
+Training starts from newly initialized model weights on every run and currently does not save a checkpoint. Running `python train.py` by itself does not make predictions. To get predictions, run `python inference.py`; that script imports `train.py` and therefore performs a fresh training run before processing `inputs.csv`. Avoid running `train.py` immediately before `inference.py` unless you intentionally want to train twice.
+
 ## Add or Change Prediction Inputs
 
 Edit `inputs.csv` with exactly these column headers:
