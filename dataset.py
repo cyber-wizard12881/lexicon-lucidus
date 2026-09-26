@@ -1,6 +1,5 @@
 """Dataset helpers for sampled MBTI text and its prepared model inputs."""
 
-import torch
 from torch.utils.data import Dataset
 import pandas as pd
 

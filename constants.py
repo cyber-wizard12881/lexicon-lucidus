@@ -1,3 +1,4 @@
+# Captures Constant values used throughout the project.
 
 # MBTI labels are kept in the same order used by the one-hot encodings.
 mbti_types = [

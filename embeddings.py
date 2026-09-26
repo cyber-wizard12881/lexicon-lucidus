@@ -3,7 +3,7 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 from dataset import MBTIDataset
-from constants import DATASET_SIZE, mbti_types
+from constants import mbti_types
 
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
 tokenizer = AutoTokenizer.from_pretrained(model_name)

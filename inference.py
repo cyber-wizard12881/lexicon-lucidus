@@ -2,8 +2,8 @@
 
 import torch
 
-from train import encoder, decoder, classifier
-from constants import EMBEDDING_DIM, mbti_types
+from train import encoder, classifier
+from constants import mbti_types
 from embeddings import generate_embeddings_for_text
 from dataset import traits_df
 import pandas as pd

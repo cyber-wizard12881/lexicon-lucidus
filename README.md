@@ -118,6 +118,13 @@ On macOS or Linux, use the same command in the activated virtual environment. Ru
 .\run_notebook.ps1
 ```
 
+## Gallery
+* Console (CLI) Run
+![001](001.png)
+
+* Notebook (GUI) Run
+![002](002.png)
+
 ## Repository Files
 
 | File | Purpose |
