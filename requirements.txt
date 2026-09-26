@@ -1,0 +1,5 @@
+pandas
+torch
+jupyterlab
+jupytext
+transformers
